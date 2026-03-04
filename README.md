@@ -1,63 +1,98 @@
 # BlockCred
 
-**Blockchain credential verification for academic records.**
+Decentralized academic credential issuance, verification, and revocation using Ethereum smart contracts and IPFS.
 
-BlockCred is a decentralized application (DApp) that issues, verifies, and revokes academic credentials using Ethereum smart contracts and IPFS-backed document storage.
+## Table of Contents
 
-## Project Depth
+- [Overview](#overview)
+- [Features](#features)
+- [Architecture](#architecture)
+- [Performance Notes](#performance-notes)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Quick Start](#quick-start)
+- [User Flows](#user-flows)
+- [Scalability](#scalability)
+- [Security](#security)
+- [Abstract](#abstract)
 
-This project is not just a basic verify-only demo. It implements a full credential lifecycle with role-based permissions and on-chain auditability.
+## Overview
 
-- **3 roles**: Super Admin (owner), University, Public Verifier/Recruiter (+ student login flow)
-- **3 core on-chain entities**: University, Student, Certificate
-- **6 smart-contract events** for traceability and audit logs
-- **2 certificate states**: `Active` and `Revoked`
-- **End-to-end lifecycle**: university registration → student onboarding → certificate issuance → public verification → revocation
+BlockCred is a full-lifecycle DApp for academic records, not just a verify-only demo.
 
-## Working Performance (with Numbers)
+It supports:
+- University onboarding by owner/admin
+- Student registration
+- Certificate issuance with deterministic credential hashing
+- Public verification of issued credentials
+- Issuer-restricted revocation with on-chain traceability
 
-Performance characteristics from the current contract architecture:
+## Features
 
-- **O(1) reads/writes** for primary lookups using mappings:
-  - University by wallet
-  - Student by `studentId`
-  - Certificate by `credentialHash`
-- **Single-transaction issuance flow**:
-  - Hash generation (`keccak256`)
-  - Certificate persistence
-  - University-wise index update
-  - Event emission
-- **Public verification path** is direct hash lookup (no permission gating), designed for fast reads.
-- **Indexed retrieval support**:
+- **Role-based access (3 roles)**
+  - Super Admin (contract owner)
+  - University
+  - Public verifier/recruiter (plus student login flow)
+
+- **Core entities (3)**
+  - University
+  - Student
+  - Certificate
+
+- **Credential lifecycle**
+  - Register university → onboard student → issue certificate → verify publicly → revoke if needed
+
+- **Auditability**
+  - Smart-contract events are emitted for major state transitions
+
+- **Certificate states (2)**
+  - `Active`
+  - `Revoked`
+
+## Architecture
+
+The contract is centered on mapping-based storage for direct lookups:
+
+- University by wallet address
+- Student by `studentId`
+- Certificate by `credentialHash`
+
+Issuance is handled in a single transaction that performs:
+1. Hash generation (`keccak256`)
+2. Certificate persistence
+3. University-wise index update
+4. Event emission
+
+Public verification is a direct hash lookup (no permission gate).
+
+## Performance Notes
+
+- Primary lookups are **O(1)** due to mappings.
+- Public verification path is optimized for direct reads.
+- Indexed retrieval exists for:
   - Global issued hash list
   - Per-university issued hash list
 
-## Scalability Notes
-
-The contract is designed to scale with growing records by using mapping-based storage for constant-time access. As data grows:
-
-- Lookup and verification remain **constant-time** for individual credentials.
-- Historical listing functions (`getIssuedHashes`, `getRegisteredStudentIds`, `getAllUniversityAddresses`) are array-returning views and may become heavy for very large datasets.
-- For production-scale deployments, the recommended pattern is:
-  - Use events + off-chain indexing (e.g., subgraph/indexer)
-  - Keep on-chain calls focused on direct hash-based verification
-  - Paginate or index list views at the application layer
-
-## Security and Integrity Highlights
-
-- Credential authenticity is tied to a deterministic hash (`keccak256`) and issuer address.
-- Credentials are immutable post-issuance except explicit status transition (`Active` → `Revoked`).
-- Revocation is restricted to the original issuing university.
-- University access is owner-governed via registration checks.
-
 ## Tech Stack
 
-- **Frontend**: React + Vite
-- **Smart Contracts**: Solidity (`^0.8.20`)
-- **Blockchain Environment**: Ethereum (Ganache local network)
-- **Web3 Library**: Ethers.js
-- **Storage**: IPFS (CID-based file reference)
-- **Dev Tools**: Hardhat, MetaMask, VS Code
+- **Frontend:** React + Vite
+- **Smart Contracts:** Solidity `^0.8.20`
+- **Blockchain (local):** Ganache
+- **Web3:** Ethers.js
+- **Storage:** IPFS (CID references)
+- **Tooling:** Hardhat, MetaMask, VS Code
+
+## Project Structure
+
+```text
+.
+├── contracts/              # Solidity contracts
+├── scripts/                # Deployment and verification scripts
+├── test/                   # Hardhat tests
+├── client/                 # React frontend
+├── hardhat.config.js
+└── README.md
+```
 
 ## Quick Start
 
@@ -68,23 +103,22 @@ npm install
 cd client && npm install
 ```
 
-### 2) Run local chain (Ganache)
+### 2) Start local blockchain (Ganache)
 
-- Start Ganache UI workspace
-- Or run CLI:
+Use Ganache UI or CLI:
 
 ```bash
 ganache-cli -p 7545
 ```
 
-### 3) Compile and deploy
+### 3) Compile and deploy contracts
 
 ```bash
 npx hardhat compile
 npx hardhat run scripts/deploy.js --network ganache
 ```
 
-### 4) Start frontend
+### 4) Run frontend
 
 ```bash
 cd client
@@ -93,10 +127,48 @@ npm run dev
 
 ### 5) Connect MetaMask
 
-- Switch to Ganache network
-- Import test accounts
-- Interact with Admin / University / Student / Verifier flows
+- Switch MetaMask to Ganache network
+- Import Ganache test accounts
+- Use Admin / University / Student / Verifier views
 
-## Formal Abstract (Final-Year Style)
+## User Flows
 
-BlockCred presents a decentralized framework for secure academic credential issuance and verification. The system addresses limitations of traditional certificate management, including forgery risks, delayed validation, and centralized trust bottlenecks. In the proposed architecture, authorized universities issue credentials whose cryptographic proofs are recorded on Ethereum, while associated certificate files are referenced through IPFS. The implementation includes role-based operational control, credential lifecycle management, and issuer-restricted revocation. By combining immutable on-chain records with decentralized file addressing, the system provides transparent, tamper-resistant, and efficiently verifiable academic credentials suitable for institutional and recruitment workflows.
+### Admin
+- Register authorized university wallets
+
+### University
+- Add students
+- Issue credentials
+- Revoke credentials issued by same university
+
+### Student
+- Access student-specific credential details
+
+### Public Verifier / Recruiter
+- Verify credential status using credential hash
+
+## Scalability
+
+As data grows:
+
+- Direct credential verification remains constant-time per credential.
+- Array-returning list methods may become heavy at high scale:
+  - `getIssuedHashes`
+  - `getRegisteredStudentIds`
+  - `getAllUniversityAddresses`
+
+Recommended production approach:
+- Index events off-chain (subgraph/indexer)
+- Keep on-chain calls focused on direct hash verification
+- Add pagination/indexing strategy at app/query layer
+
+## Security
+
+- Credential authenticity derives from deterministic `keccak256` hashing plus issuer identity.
+- Credentials are immutable after issuance except explicit status transition from `Active` to `Revoked`.
+- Revocation is restricted to the original issuing university.
+- University access control is owner-governed.
+
+## Abstract
+
+BlockCred provides a decentralized framework for issuing and verifying academic credentials. It addresses forgery risk, validation delays, and centralized trust bottlenecks by recording cryptographic proofs on Ethereum and referencing certificate files through IPFS. The system combines role-based control, lifecycle management, and issuer-restricted revocation to deliver transparent, tamper-resistant, and efficient credential verification for institutions and recruiters.
