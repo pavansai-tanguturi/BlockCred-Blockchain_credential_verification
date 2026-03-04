@@ -1,0 +1,39 @@
+{
+  "name": "academic-credential-verification-dapp",
+  "version": "1.0.0",
+  "description": "<<<<<<< HEAD",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "@nomiclabs/hardhat-waffle": "^2.0.6",
+    "@openzeppelin/contracts": "^5.4.0",
+    "chai": "^6.2.2",
+    "dotenv": "^16.6.1",
+    "ethereum-waffle": "^4.0.10",
+    "ethers": "^5.8.0",
+    "hardhat": "^2.28.6"
+  },
+  "dependencies": {
+    "@metamask/detect-provider": "^2.0.0",
+    "axios": "^1.13.5",
+    "web3": "^4.16.0"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ganesh589189/Simple-Academic-Credential-Verification-DAPP.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ganesh589189/Simple-Academic-Credential-Verification-DAPP/issues"
+  },
+  "homepage": "https://github.com/ganesh589189/Simple-Academic-Credential-Verification-DAPP#readme"
+}
