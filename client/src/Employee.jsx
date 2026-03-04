@@ -6,6 +6,42 @@ import "./Employee.css";
 
 const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
+const UserIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path
+      d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-3.86 0-7 2.24-7 5v1h14v-1c0-2.76-3.14-5-7-5Z"
+      fill="currentColor"
+    />
+  </svg>
+);
+
+const LockIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path
+      d="M17 9h-1V7a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2Zm-7-2a2 2 0 1 1 4 0v2h-4Z"
+      fill="currentColor"
+    />
+  </svg>
+);
+
+const BuildingIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path
+      d="M3 21h18v-2h-1V4a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v5H4a1 1 0 0 0-1 1Zm6-16h9v14h-2v-3a1 1 0 0 0-1-1h-3a1 1 0 0 0-1 1v3H9ZM5 11h2v8H5Z"
+      fill="currentColor"
+    />
+  </svg>
+);
+
+const ArrowRightIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path
+      d="M13.29 5.29a1 1 0 0 0 0 1.42L17.59 11H4a1 1 0 0 0 0 2h13.59l-4.3 4.29a1 1 0 1 0 1.42 1.42l6-6a1 1 0 0 0 0-1.42l-6-6a1 1 0 0 0-1.42 0Z"
+      fill="currentColor"
+    />
+  </svg>
+);
+
 function Employee() {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -14,7 +50,6 @@ function Employee() {
   const [verificationResult, setVerificationResult] = useState(null);
   const [isVerifying, setIsVerifying] = useState(false);
   const [contract, setContract] = useState(null);
-  const [account, setAccount] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   const handleLogin = () => {
@@ -33,8 +68,6 @@ function Employee() {
       const provider = new BrowserProvider(window.ethereum);
       await window.ethereum.request({ method: "eth_requestAccounts" });
       const signer = await provider.getSigner();
-      const address = await signer.getAddress();
-      setAccount(address);
       const cred = new Contract(contractAddress, abi.abi, signer);
       setContract(cred);
     } catch (error) {
@@ -69,9 +102,11 @@ function Employee() {
         // Get university name from issuer address
         let issuerName = "Unknown University";
         try {
-          const [uName, uRegistered] = await contract.getUniversityByAddress(credentialData.issuer);
+          const [uName] = await contract.getUniversityByAddress(credentialData.issuer);
           if (uName) issuerName = uName;
-        } catch {}
+        } catch (error) {
+          console.warn("Unable to resolve issuer university name", error);
+        }
 
         setVerificationResult({
           success: true,
@@ -133,7 +168,7 @@ function Employee() {
       <div className="employee-container">
         <div className="employee-login-box">
           <div className="login-header">
-            <div className="company-logo">🏢</div>
+            <div className="company-logo"><BuildingIcon /></div>
             <h2>Employee Verification Portal</h2>
             <p className="login-subtitle">Corporate Credential Verification System</p>
           </div>
@@ -146,7 +181,7 @@ function Employee() {
                 value={loginForm.employeeId}
                 onChange={(e) => setLoginForm({ ...loginForm, employeeId: e.target.value })}
               />
-              <span className="input-icon">👤</span>
+              <span className="input-icon"><UserIcon /></span>
             </div>
             <div className="input-group">
               <label>Password</label>
@@ -156,11 +191,11 @@ function Employee() {
                 value={loginForm.password}
                 onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
               />
-              <span className="input-icon">🔒</span>
+              <span className="input-icon"><LockIcon /></span>
             </div>
             <button className="login-button" onClick={handleLogin} disabled={isLoggingIn}>
-              <span>{isLoggingIn ? 'Connecting...' : 'Login to Verify'}</span>
-              <span className="button-icon">→</span>
+              <span style={{ color: "#ffffff" }}>{isLoggingIn ? 'Connecting...' : 'Login to Verify'}</span>
+              <span className="button-icon"><ArrowRightIcon /></span>
             </button>
           </div>
         </div>
@@ -173,7 +208,7 @@ function Employee() {
       <div className="employee-panel">
         <div className="panel-header">
           <div className="header-left">
-            <div className="company-badge">🏢</div>
+            <div className="company-badge"><BuildingIcon /></div>
             <div>
               <h2>Credential Verification Center</h2>
               <p className="header-subtitle">Multi-University Verification System</p>

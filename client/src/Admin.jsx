@@ -69,7 +69,7 @@ function Admin() {
   if (!isLoggedIn) {
     return (
       <div className="admin-container">
-        <div className="admin-box">
+        <div className="admin-box admin-login-box">
           <h2>Admin / University Login</h2>
           <p style={{ textAlign: "center", background: "none", border: "none", padding: "0.5rem" }}>
             Connect your MetaMask wallet to log in as <strong>Super Admin</strong> or a <strong>Registered University</strong>.

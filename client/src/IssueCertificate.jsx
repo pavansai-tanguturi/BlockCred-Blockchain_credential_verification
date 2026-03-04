@@ -354,7 +354,7 @@ function IssueCertificate() {
               <strong>Hash:</strong> 
               <span className="hash-value">{rec.hash}</span>
             </div>
-            <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+            <div className="card-buttons">
                 {rec.file && (
                     <button
                         onClick={() => {

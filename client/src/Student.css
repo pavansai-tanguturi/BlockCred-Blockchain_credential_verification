@@ -1,223 +1,208 @@
-/* =======================
-   STUDENT.CSS - MODERN & FRIENDLY THEME
-   Clean, Accessible, and User-Centric Design
-   ======================= */
-
-/* Import the same fonts as the other pages for consistency */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap');
-
 :root {
-  /* Student UI Color Palette */
-  --student-main-blue: #007bff;
-  --student-light-blue: #e6f2ff;
-  --student-dark: #343a40;
-  --student-gray: #6c757d;
-  --student-light-gray: #f8f9fa;
-  --student-border: #dee2e6;
-  
-  /* Shared Colors */
-  --success-green: #28a745;
-  --failure-red: #dc3545;
-  --white: #ffffff;
-
-  /* Typography */
-  --font-heading: 'Poppins', sans-serif;
-  --font-body: 'Inter', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-
-  /* Effects */
-  --shadow-sm: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
-  --shadow-md: 0 0.5rem 1rem rgba(0,0,0,0.15);
-  --transition: all 0.3s ease-in-out;
-  --radius: 8px;
-  --radius-lg: 12px;
+  --student-bg: #f4f8fc;
+  --student-card: #ffffff;
+  --student-text: #0f172a;
+  --student-muted: #64748b;
+  --student-primary: #1d4ed8;
+  --student-success: #16a34a;
+  --student-danger: #dc2626;
+  --student-line: #dbe5ef;
 }
-
-/* =======================
-   STUDENT CONTAINER & BOX
-   ======================= */
 
 .student-container {
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: var(--student-light-gray);
-  padding: 2rem;
-  font-family: var(--font-body);
+  background:
+    radial-gradient(850px 450px at 0% 0%, rgba(37, 99, 235, 0.1), transparent 60%),
+    radial-gradient(850px 450px at 100% 100%, rgba(14, 165, 233, 0.1), transparent 60%),
+    var(--student-bg);
+  padding: 1.5rem;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
 
 .student-login-box,
 .student-dashboard-box {
-  background: var(--white);
-  border-radius: var(--radius-lg);
-  padding: 3rem;
-  max-width: 800px;
   width: 100%;
-  box-shadow: var(--shadow-md);
+  max-width: 920px;
+  background: var(--student-card);
+  border: 1px solid var(--student-line);
+  border-radius: 16px;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(680px 300px at 100% 0%, rgba(29, 78, 216, 0.08), transparent 62%),
+    radial-gradient(580px 260px at 0% 100%, rgba(2, 132, 199, 0.08), transparent 62%),
+    var(--student-card);
+}
+
+.student-dashboard-box::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.1) 1px, transparent 1px);
+  background-size: 34px 34px;
+  opacity: 0.2;
+}
+
+.student-dashboard-box > * {
+  position: relative;
+  z-index: 1;
+}
+
+.student-login-box {
+  max-width: 460px;
   text-align: center;
 }
 
 .student-login-box h2,
 .student-dashboard-box h2 {
-  font-family: var(--font-heading);
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--student-dark);
-  margin-bottom: 2rem;
+  margin: 0 0 1rem;
+  color: var(--student-text);
+  font-size: clamp(1.5rem, 2.8vw, 2rem);
+  font-weight: 800;
 }
 
-/* =======================
-   LOGIN FORM
-   ======================= */
+.student-dashboard-box h3 {
+  margin: 1rem 0;
+  color: var(--student-text);
+}
 
 .student-login-box input {
   width: 100%;
-  padding: 1rem;
-  margin: 0.5rem 0;
-  border: 1px solid var(--student-border);
-  border-radius: var(--radius);
-  font-family: var(--font-body);
-  transition: var(--transition);
+  padding: 0.85rem 0.95rem;
+  margin-top: 0.65rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .student-login-box input:focus {
   outline: none;
-  border-color: var(--student-main-blue);
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+  border-color: var(--student-primary);
+  box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.14);
 }
 
 .student-login-box button {
   width: 100%;
-  padding: 1rem;
-  margin-top: 1.5rem;
+  margin-top: 0.9rem;
+  padding: 0.9rem 1rem;
   border: none;
-  border-radius: var(--radius);
-  background: var(--student-main-blue);
-  color: var(--white);
-  font-size: 1.1rem;
-  font-weight: 600;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--student-primary), #0284c7);
+  color: #fff;
+  font-weight: 700;
   cursor: pointer;
-  transition: var(--transition);
 }
 
 .student-login-box button:hover {
-  background: #0056b3;
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-sm);
+  filter: brightness(1.05);
 }
-
-.student-login-box button:disabled {
-  background: var(--student-border);
-  cursor: not-allowed;
-}
-
-/* =======================
-   DASHBOARD
-   ======================= */
 
 .dashboard-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
-}
-
-.dashboard-header h2 {
-  margin-bottom: 0;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--student-line);
 }
 
 .no-certificates-message {
-  padding: 2rem;
-  background: var(--student-light-blue);
-  border: 1px dashed var(--student-main-blue);
-  border-radius: var(--radius);
-  color: var(--student-dark);
-  font-style: italic;
+  padding: 1rem;
+  border: 1px dashed #93c5fd;
+  border-radius: 10px;
+  background: #eff6ff;
+  color: #1e3a8a;
 }
 
 .certificate-card {
-  background: #f8f9fa;
-  border: 1px solid var(--student-border);
-  border-left: 5px solid var(--student-main-blue);
-  border-radius: var(--radius);
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
-  text-align: left;
+  padding: 1rem;
+  margin-bottom: 0.9rem;
+  border: 1px solid var(--student-line);
+  border-left: 4px solid var(--student-primary);
+  border-radius: 12px;
+  background: #fff;
 }
 
 .certificate-card p {
-  margin: 0.5rem 0;
-  color: var(--student-gray);
+  margin: 0.25rem 0;
+  color: #334155;
 }
 
 .certificate-card p strong {
-  color: var(--student-dark);
-  font-weight: 600;
-  margin-right: 0.5rem;
+  color: var(--student-text);
 }
 
 .hash-container {
-  margin-top: 1rem;
-  padding: 0.75rem;
-  background: var(--student-border);
-  border-radius: var(--radius);
+  margin-top: 0.6rem;
+  padding: 0.7rem;
+  border-radius: 8px;
+  background: #f1f5f9;
 }
 
 .hash-value {
-  font-family: var(--font-mono);
+  margin-left: 0.4rem;
+  display: inline-block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.85rem;
   word-break: break-all;
-  color: var(--student-dark);
-  font-weight: 500;
-  font-size: 0.9rem;
 }
 
 .card-buttons {
-  margin-top: 1.5rem;
+  margin-top: 0.85rem;
   display: flex;
-  gap: 1rem;
+  gap: 0.6rem;
+  flex-wrap: wrap;
 }
 
 .card-action-button,
-.copy-button {
-  flex: 1;
-  padding: 0.75rem 1rem;
+.copy-button,
+.logout-button {
   border: none;
-  border-radius: var(--radius);
-  font-weight: 600;
+  border-radius: 9px;
+  padding: 0.65rem 0.95rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: var(--transition);
 }
 
 .card-action-button {
-  background: var(--success-green);
-  color: var(--white);
-}
-
-.card-action-button:hover {
-  background: #218838;
+  background: var(--student-success);
+  color: #fff;
 }
 
 .copy-button {
-  background: var(--student-gray);
-  color: var(--white);
-}
-
-.copy-button:hover {
-  background: #5a6268;
+  background: #475569;
+  color: #fff;
 }
 
 .logout-button {
-  padding: 0.75rem 1.5rem;
-  background: var(--failure-red);
-  color: var(--white);
-  border: none;
-  border-radius: var(--radius);
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
+  background: #fff1f2;
+  color: var(--student-danger);
+  border: 1px solid #fecdd3;
 }
 
+.card-action-button:hover,
+.copy-button:hover,
 .logout-button:hover {
-  background: #c82333;
+  filter: brightness(1.05);
+}
+
+@media (max-width: 768px) {
+  .student-container {
+    padding: 1rem;
+    align-items: flex-start;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
